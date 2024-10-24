@@ -1,0 +1,41 @@
+---
+title: "R studio and R Markdown"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is just an example Rmarkdown document, with a short explanation of the R Studio layout.
+
+### R Studio Layout
+
+**Bottom left**: "Console" window. This is where you interact with R - type a command and press Enter, and you will see the results. When you close R studio, anything you type in the Console is forgotten. For code you want to run again, use the "Source" window.
+
+**Top left**: "Source" window. This is where you type your text and code and save it as an R markdown file (like this one), so you can run is as many times as you like.
+
+**Top right**: "Environment" window. This shows you the list of all data you have currently available.
+
+**Bottom right**: This is where your plots will be displayed. Under the "packages" tab it shows the packagers currently installed and loaded (more on that next week). The "Help" tab is also quite handy!
+
+### R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+
+To knit to pdf, you need to have LaTeX installed on your computer. If you don't already have it, you can install the tinytex package: install.packages("tinytex")
+After that you'll need to restart Rstudio and run: tinytex::install_tinytex()
+
+Try it with this Rmarkdown document, as you will need to create pdf outputs to submit your assignments. 
+
+getwd()
+
+
+
+
+
