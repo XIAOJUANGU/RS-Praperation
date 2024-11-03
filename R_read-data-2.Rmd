@@ -1,0 +1,232 @@
+---
+title: "Basic R and how to read in data"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This guide is partly based on online material from Amy Willis, Kiirsti Owen and Amelia McNamara, and the book "R for Data Science" by Hadley Wickham and Garrett Grolemund. Thank you amazing R community!
+
+
+### R as a calculator
+
+In the Console window below, type: 2+2 and press Enter
+Also try:
+
+```{r}
+2^5
+3/10
+(3+5)^2
+sqrt(4)
+```
+
+Tip: To run a line (or multiple lines) of code from a script without typing them into the Console, 
+select the line(s) you want to run and press Ctrl+Enter (Command+Enter on a Mac)
+
+
+### Objects
+
+R stores data as objects. You create new objects when you assign a value to them using "<-":
+
+```{r}
+x <- 3  # Check the "Environment" window!
+```
+```{r}
+x <- 3
+```
+
+Tip: use the R studio shortcut Alt+ - (Alt and the minus sign) to easily create the assignment symbol <-
+
+```{r}
+y <- 6
+x+y
+```
+```{r}
+y <- 6
+x+y
+```
+
+
+Tip: R is case sensitive so if you've defined your object as x, it will not recognise (capital) X. 
+Similarly, the function for square root is sqrt, R will give you an error if you try to use Sqrt.
+
+
+### Packages
+
+Packages extend the functionality of base R. They are distributed via CRAN: the Comprehensive R Archive Network
+
+To install a package, use: install.packages("packagename")
+You then need to load it, using library(packagename)
+We will be using a collection of packages called the Tidyverse:
+
+```{r}
+library(tidyverse)
+```
+
+When you load the tidyverse, you'll see a message about conflicts. As there is an (increasingly) large number of packages in R, it is possible to have functions with the same name in more than one package. The message tells you that packages dplyr and stats both have a function called filter and the one that will be used is the one from dplyr. It is the one that was loaded last.
+
+If you want to use a function from a particular package, you need to include packagename:: before the name of the function.
+
+In this example, you can use stats::filter() instead of just filter() to use filter from the stats package.
+```{r}
+find("filter")
+```
+
+
+```{r}
+find("filter") # this shows you the packages a function belongs to, in order of priority
+```
+
+The tidyverse packages we will be using mostly in this course are readr (for reading in data), dplyr (for transforming data) and ggplot2 (for plotting). 
+
+
+### Functions
+
+When using the Tidyverse, you can call functions in two ways:
+
+```{r}
+sqrt(4) # base R
+
+4 %>%
+  sqrt  # "pipe" operator (you can read is as "and then...")
+```
+
+Tip: use the R Studio shortcut Ctrl + Sft + M to create the pipe operator %>%
+
+Tip: If you are not sure what a function does, type ?functionname in the Console, e.g. ?sqrt
+
+
+### Reading in data
+
+Before we read in our data, let's consider where we have saved our data file. Since we want our code to be reusable (by us and other people), the last thing we want is to include the location of the file in our code, something like: 
+
+"C:/dimitra/data/datafile.csv"
+
+The above would only work for me, and only for the particular computer where folder "dimitra" contains a folder called "data".
+
+To avoid these issues, we need to do two things:
+
+1. Use R projects. (I hope you are doing that already!) Save the data and R markdown file inside the R project. Exactly where you save your code doesn't matter, you just need to note the location of your data with respect to the .Rproj file.
+2. Use the R package "here". "Here" points to the location of the .Rproj file (which is the working directory for your project), so you just need to add "here" in front of the relative path to your data file.  
+
+For example, if your data file (a comma-separated value (csv) file) was saved inside a "data" directory, you would say:
+```{r}
+library(tidyverse)
+data_fev<- read_csv("RS-Praperation/fev.csv")
+```
+library(here)
+
+fev_data <- read_csv(here("data/fev.csv"))
+
+
+To read in a file that is saved in the same directory as the .Rproj file:
+
+```{r}
+library(here)
+fev_data <- read_csv(here("fev.csv"))
+```
+
+(Remember to install the "here" package the first time.)
+
+--> How would you use read_csv with the pipe operator?
+
+```{r}
+library(dplyr)
+library(readr)    
+library(magrittr)  
+fev_data <-read_csv("RS-Praperation/fev.csv")%>%
+filter(age > 20)
+```
+```{r}
+head(fev_data)
+```
+
+Look at the top few rows of the data:
+
+```{r}
+head(fev_data)
+```
+```{r}
+library(readxl)
+txt.data <- read.table("RS-Praperation/psa.txt")
+
+```
+
+
+fev_data is a tibble - this is a tidyverse structure similar to a data frame (from base R) but with some differences:
+
+- default printing is shorter
+- tells you the column types (character, double, etc.)
+- doesn't change the types of inputs
+
+
+Tip: if your data is in a Microsoft Excel spreadsheet, you will need a different package to read it in, such as readxl. So you'll need:
+
+install.packages("readxl")
+
+library(readxl)
+
+excel_data <- read_xlsx(filename, sheet = 1) #(to read the first sheet)
+
+
+--> How would you read in a text file? (Check the data import cheat sheet!)
+There is a text file in your dataset so you can practice: psa.txt
+
+```{r}
+library(dplyr)
+library(readr)
+txt.data<- read.table("RS-Praperation/psa.txt")
+```
+
+
+--> Have a look at the "Useful arguments" section of the data import cheat sheet. 
+Use a few of them when you read in fev.csv and look at the data, is that what you expected?
+
+```{r}
+library(tidyverse)
+data_fev <- read_csv ("RS-Praperation/fev.csv")
+```
+
+--> Apply the summary function to a tibble. What does it do?
+
+```{r}
+library(here)
+summary("RS-Praperation/data_fev$column")
+```
+
+
+### Operating on data: columns
+
+Individual columns are identified using the $ symbol:
+
+```{r}
+head(fev_data$fev)
+summary(fev_data$fev)
+length(fev_data$fev)
+```
+```{r}
+names(txt.data)
+dim(txt.data)
+```
+
+Other useful functions for tibbles and data frames:
+
+```{r}
+names(fev_data)
+dim(fev_data)
+```
+```{r}
+max(fev_data)
+mean(fev_data)
+sd(fev_data)
+```
+
+Other useful functions for columns:
+
+```{r}
+max(fev_data$fev, na.rm = TRUE)
+mean(fev_data$fev, na.rm = TRUE)
+sd(fev_data$fev, na.rm = TRUE)
+```
